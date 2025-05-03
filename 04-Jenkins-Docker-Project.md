@@ -69,6 +69,47 @@ sudo systemctl restart jenkins
 sudo docker version
 ```
 
+## Create a script file:
+```
+#!/bin/bash
+
+echo "🚀 Installing NGINX..."
+sudo apt update
+sudo apt install nginx -y
+
+echo "📁 Creating NGINX config for Jenkins..."
+cat <<EOL | sudo tee /etc/nginx/sites-available/jenkins
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:8080;
+
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+
+        proxy_redirect off;
+    }
+}
+EOL
+
+echo "🔗 Enabling Jenkins site config..."
+sudo ln -s /etc/nginx/sites-available/jenkins /etc/nginx/sites-enabled/
+
+echo "🧹 Removing default site config (optional)..."
+sudo rm -f /etc/nginx/sites-enabled/default
+
+echo "🔄 Restarting NGINX..."
+sudo nginx -t && sudo systemctl reload nginx
+
+echo "✅ NGINX reverse proxy setup complete!"
+echo "🌐 Now access Jenkins via: http://<your-ec2-ip>/"
+
+```
+
 # Step - 4 : Create Jenkins Job #
 
 - **Stage-1 : Clone Git Repo** <br/> 
