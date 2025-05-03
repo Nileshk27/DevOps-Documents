@@ -113,7 +113,7 @@ echo "🌐 Now access Jenkins via: http://<your-ec2-ip>/"
 ## Make it executable:
 chmod +x setup_jenkins_nginx.sh
 
-##Run it: 
+## Run it: 
 
 ./setup_jenkins_nginx.sh
 
