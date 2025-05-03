@@ -139,6 +139,7 @@ URL : http://public-ip:port/
 ## Step - 8 : After your practise, delete resources we have used in AWS Cloud to avoid billing ##
 
 ### Pipeline groovi script
+```
 pipeline {
     agent any
 
@@ -172,4 +173,4 @@ pipeline {
         }
     }
 }
-
+```
