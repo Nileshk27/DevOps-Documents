@@ -137,3 +137,39 @@ URL : http://public-ip:port/
 # We are done with our Setup #
 	
 ## Step - 8 : After your practise, delete resources we have used in AWS Cloud to avoid billing ##
+
+### Pipeline groovi script
+pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M3"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/Nileshk27/maven-web-app.git'
+
+                // Run Maven on a Unix agent.
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+        stage('Deployment') {
+            steps {
+                sh '''
+                    docker build -t maven-web-app .
+                    docker container stop maven-web-appc || true
+                    docker container rm maven-web-appc || true
+                    docker run -d --name maven-web-appc -p 8081:8080 maven-web-app
+                '''
+            }
+        }
+    }
+}
+
