@@ -70,6 +70,7 @@ sudo docker version
 ```
 
 ## Create a script file:
+nano setup_jenkins_nginx.sh
 ```
 #!/bin/bash
 
